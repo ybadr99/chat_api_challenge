@@ -2,6 +2,16 @@ class MessagesController < ApplicationController
       before_action :set_chat
       before_action :set_message, only: [:show, :update, :destroy]
         
+      def search
+        if params[:query].present?
+          @messages = Message.search(params[:query], where: { chat_id: @chat.id })
+          render json: @messages.map { |message| { chat_id: message.chat_id, number: message.number, body: message.body } }
+        else
+          render json: { error: 'Query parameter cannot be blank' }, status: :unprocessable_entity
+        end
+      end
+      
+
       def index
         @messages = @chat.messages
         render json: @messages.map { |message| { number: message.number, body: message.body } }
@@ -19,7 +29,7 @@ class MessagesController < ApplicationController
         if message_params[:body].blank?
           render json: { error: 'Message body cannot be blank' }, status: :unprocessable_entity
         else
-          CreateMessageJob.perform_later(@chat.id, params[:body])
+          CreateMessageJob.perform_later(@chat.id, message_params[:body])
           render json: { message: 'Message creation initiated' }, status: :accepted
         end
       end

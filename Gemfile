@@ -50,3 +50,6 @@ gem 'sidekiq-cron'
 gem 'rack-session'
 
 gem 'redis'
+
+gem 'searchkick'
+gem 'elasticsearch', '~> 7.0'

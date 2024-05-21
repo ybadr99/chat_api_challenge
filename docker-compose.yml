@@ -16,6 +16,15 @@ services:
     volumes:
       - redis_data:/data
 
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.0
+    environment:
+      - discovery.type=single-node
+    ports:
+      - '9200:9200'
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+
   web:
     build: .
     command: rails server -b 0.0.0.0
@@ -26,12 +35,14 @@ services:
     depends_on:
       - db
       - redis
+      - elasticsearch
     environment:
       DATABASE_HOST: db
       DATABASE_NAME: chat_api_development
       DATABASE_USER: user
       DATABASE_PASSWORD: password
       REDIS_URL: redis://redis:6379/1
+      ELASTICSEARCH_URL: http://elasticsearch:9200
 
   sidekiq:
     build: .
@@ -41,13 +52,16 @@ services:
     depends_on:
       - db
       - redis
+      - elasticsearch
     environment:
       DATABASE_HOST: db
       DATABASE_NAME: chat_api_development
       DATABASE_USER: user
       DATABASE_PASSWORD: password
       REDIS_URL: redis://redis:6379/1
+      ELASTICSEARCH_URL: http://elasticsearch:9200
 
 volumes:
   db_data:
   redis_data:
+  es_data:

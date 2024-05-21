@@ -6,7 +6,11 @@ Rails.application.routes.draw do
 
   resources :applications, param: :token, only: [:index, :create, :update, :show, :destroy] do
       resources :chats, param: :number, only: [:create, :show, :index, :destroy] do
-        resources :messages, param: :number, only: [:create, :show, :index, :update, :destroy]
+        resources :messages, param: :number, only: [:create, :show, :index, :update, :destroy] do
+          collection do
+            get 'search'
+          end
+        end
       end
   end
 
