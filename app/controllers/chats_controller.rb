@@ -3,13 +3,8 @@ class ChatsController < ApplicationController
   before_action :set_chat, only: [:show, :destroy]
 
   def create
-    @chat = @application.chats.new
-    if @chat.save
-      # UpdateChatsCountJob.perform_later(@application.id)
-      render json: @chat.slice(:number, :messages_count), status: :created
-    else
-      render json: @chat.errors, status: :unprocessable_entity
-    end
+    CreateChatJob.perform_later(@application.id)
+    render json: { status: 'Chat creation initiated' }, status: :accepted
   end
 
   def show

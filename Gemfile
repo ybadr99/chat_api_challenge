@@ -48,3 +48,5 @@ end
 gem 'sidekiq'
 gem 'sidekiq-cron'
 gem 'rack-session'
+
+gem 'redis'

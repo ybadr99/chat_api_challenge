@@ -16,15 +16,14 @@ class MessagesController < ApplicationController
       end
 
       def create
-            @message = @chat.messages.new(message_params)
-            if @message.save
-              # UpdateMessagesCountJob.perform_later(@chat.id)
-              render json: @message.slice(:number, :body, :chat_id)
-            else
-              render json: @message.errors, status: :unprocessable_entity
-            end
+        if message_params[:body].blank?
+          render json: { error: 'Message body cannot be blank' }, status: :unprocessable_entity
+        else
+          CreateMessageJob.perform_later(@chat.id, params[:body])
+          render json: { message: 'Message creation initiated' }, status: :accepted
+        end
       end
-
+      
       def update
             if @message.update(message_params)
               render json: @message.slice(:number, :body, :chat_id)
