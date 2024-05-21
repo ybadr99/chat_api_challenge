@@ -5,6 +5,7 @@ class ChatsController < ApplicationController
   def create
     @chat = @application.chats.new
     if @chat.save
+      # UpdateChatsCountJob.perform_later(@application.id)
       render json: @chat.slice(:number, :messages_count), status: :created
     else
       render json: @chat.errors, status: :unprocessable_entity
