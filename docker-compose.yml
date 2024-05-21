@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    volumes:
+      - db_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: chat_api_development
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+
+  redis:
+    image: redis:6.2
+    volumes:
+      - redis_data:/data
+
+  web:
+    build: .
+    command: rails server -b 0.0.0.0
+    volumes:
+      - .:/app
+    ports:
+      - '3000:3000'
+    depends_on:
+      - db
+      - redis
+    environment:
+      DATABASE_HOST: db
+      DATABASE_NAME: chat_api_development
+      DATABASE_USER: user
+      DATABASE_PASSWORD: password
+      REDIS_URL: redis://redis:6379/1
+
+  sidekiq:
+    build: .
+    command: bundle exec sidekiq
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+      - redis
+    environment:
+      DATABASE_HOST: db
+      DATABASE_NAME: chat_api_development
+      DATABASE_USER: user
+      DATABASE_PASSWORD: password
+      REDIS_URL: redis://redis:6379/1
+
+volumes:
+  db_data:
+  redis_data:
