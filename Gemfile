@@ -48,3 +48,8 @@ end
 gem 'sidekiq'
 gem 'sidekiq-cron'
 gem 'rack-session'
+
+gem 'redis'
+
+gem 'elasticsearch-model'
+gem 'elasticsearch-rails'

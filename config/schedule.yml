@@ -1,0 +1,5 @@
+recalculate_counts:
+  cron: '0 * * * *'
+  class: 'RecalculateCountsJob'
+  queue: default
+  description: 'Recalculate the chats_count and messages_count for all applications and chats every hour'
