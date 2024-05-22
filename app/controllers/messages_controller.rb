@@ -4,8 +4,8 @@ class MessagesController < ApplicationController
         
       def search
         if params[:query].present?
-          @messages = Message.search(params[:query], where: { chat_id: @chat.id })
-          render json: @messages.map { |message| { chat_id: message.chat_id, number: message.number, body: message.body } }
+          @messages = Message.search(params[:query], @chat.id)
+          render json: @messages.records.map { |message| { chat_id: message.chat_id, number: message.number, body: message.body } }
         else
           render json: { error: 'Query parameter cannot be blank' }, status: :unprocessable_entity
         end

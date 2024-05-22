@@ -51,5 +51,5 @@ gem 'rack-session'
 
 gem 'redis'
 
-gem 'searchkick'
-gem 'elasticsearch', '~> 7.0'
+gem 'elasticsearch-model'
+gem 'elasticsearch-rails'

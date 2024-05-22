@@ -7,8 +7,8 @@ rm -f /app/tmp/pids/server.pid
 # Run database migrations
 bundle exec rake db:migrate
 
-# Reindex searchkick models
-bundle exec rails searchkick:reindex:all
+# Import messages into Elasticsearch
+bundle exec rails runner "Message.import(force: true)"
 
 # # Seed the database
 # bundle exec rake db:seed
