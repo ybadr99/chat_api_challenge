@@ -1,10 +1,11 @@
 class ChatsController < ApplicationController
-  before_action :set_application
+  before_action :set_application  
   before_action :set_chat, only: [:show, :destroy]
 
   def create
+    chat_number = @application.next_chat_number
     CreateChatJob.perform_later(@application.id)
-    render json: { status: 'Chat creation initiated' }, status: :accepted
+    render json: { number: chat_number }, status: :accepted
   end
 
   def show

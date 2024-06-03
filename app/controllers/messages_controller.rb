@@ -29,8 +29,9 @@ class MessagesController < ApplicationController
         if message_params[:body].blank?
           render json: { error: 'Message body cannot be blank' }, status: :unprocessable_entity
         else
-          CreateMessageJob.perform_later(@chat.id, message_params[:body])
-          render json: { message: 'Message creation initiated' }, status: :accepted
+          message_number = @chat.next_message_number
+          CreateMessageJob.perform_later(@chat.id, message_params[:body], message_number)
+          render json: { number: message_number }, status: :accepted
         end
       end
       
